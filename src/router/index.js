@@ -15,6 +15,12 @@ const router = createRouter({
       name: "categories",
       component: () => import("../pages/Categories.vue"),
     },
+
+    {
+      path: ROUTES_PATHS.RECIPE,
+      name: "recipe",
+      component: () => import("../pages/Recipe.vue"),
+    },
   ],
 });
 
