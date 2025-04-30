@@ -4,6 +4,7 @@
     <template #controls>
       <AppButton text="Добавить рецепты"></AppButton>
     </template>
+    <template #inner> {{ recipes }} </template>
   </AppLayout>
 </template>
 
@@ -18,7 +19,6 @@ const recipes = ref();
 async function fetchRecipes() {
   try {
     recipes.value = await RecipeService.getRecipesByLetter();
-    console.log(recipes.value);
   } catch (error) {
     console.error("Error fetching recipes:", error);
   }
