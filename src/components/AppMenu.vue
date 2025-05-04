@@ -31,9 +31,7 @@
 
 <script setup>
 import { ROUTES_PATHS } from "@/constants";
-import { onMounted } from "vue";
-import { useRouter, useRoute } from "vue-router";
-const router = useRouter();
+import { useRoute } from "vue-router";
 const route = useRoute();
 
 function isPathActive(path) {
@@ -42,10 +40,11 @@ function isPathActive(path) {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/styles/index.scss";
+@use "@/assets/styles/variables.scss";
 .menu {
-  border-right: 1px solid $border;
-  height: 100vh;
+  border-right: 1px solid variables.$border;
+  height: 100%;
+  min-height: 100vh;
   padding: 20px 5px 0px;
 }
 
@@ -55,12 +54,12 @@ function isPathActive(path) {
 
 .logo {
   padding: 0 15px 15px;
-  border-bottom: 1px solid $border;
+  border-bottom: 1px solid variables.$border;
 }
 .item {
-  color: $violet;
+  color: variables.$violet;
   &.active {
-    color: $pink;
+    color: variables.$pink;
   }
 }
 </style>
