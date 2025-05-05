@@ -1,16 +1,23 @@
 <template>
   <AppLayout>
     <template #title> Категории </template>
-    <template #controls>
-      <AppButton text="Добавить категорию"></AppButton>
+    <template #inner>
+      <el-table :data="categories" style="width: 100%">
+        <el-table-column prop="strCategory" label="Category" />
+      </el-table>
     </template>
-    <template #inner></template>
   </AppLayout>
 </template>
 
 <script setup>
-import AppButton from "@/components/AppButton.vue";
 import AppLayout from "@/layouts/AppLayout.vue";
+import { useRootStore } from "@/stores/root";
+import { computed } from "vue";
+const rootStore = useRootStore();
+
+const categories = computed(() => {
+  return rootStore.categories;
+});
 </script>
 
 <style lang="scss" scoped></style>

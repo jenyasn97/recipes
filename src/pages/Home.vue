@@ -6,8 +6,10 @@
         <AppButton text="Добавить рецепты"></AppButton>
       </RouterLink>
     </template>
+
     <template #inner>
-      <div class="wrapper">
+      <AppLoader v-if="isLoading" />
+      <div v-else class="wrapper">
         <el-table :data="recipes">
           <el-table-column prop="idMeal" label="Id" />
           <el-table-column label="Image">
@@ -25,8 +27,8 @@
               <template v-if="scope?.row?.strTags"
                 ><el-tag type="primary" class="tag" v-for="(tag, key) in scope.row.strTags.split(',')" :key="key">{{ tag }}</el-tag></template
               >
-            </template></el-table-column
-          >
+            </template>
+          </el-table-column>
         </el-table>
       </div>
     </template>
@@ -35,6 +37,7 @@
 
 <script setup>
 import AppButton from "@/components/AppButton.vue";
+import AppLoader from "@/components/AppLoader.vue";
 import { ROUTES_PATHS } from "@/constants";
 import AppLayout from "@/layouts/AppLayout.vue";
 import { RecipeService } from "@/services";
@@ -42,12 +45,16 @@ import { onMounted, ref } from "vue";
 import { RouterLink } from "vue-router";
 
 const recipes = ref();
+const isLoading = ref(false);
 
 async function fetchRecipes() {
   try {
+    isLoading.value = true;
     recipes.value = await RecipeService.getRecipesByLetter();
   } catch (error) {
     console.error("Error fetching recipes:", error);
+  } finally {
+    isLoading.value = false;
   }
 }
 

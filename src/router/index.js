@@ -1,5 +1,5 @@
+import { ROUTES_PATHS } from "@/constants";
 import { createRouter, createWebHistory } from "vue-router";
-import { ROUTES_PATHS } from "../constants";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -8,18 +8,18 @@ const router = createRouter({
     {
       path: ROUTES_PATHS.HOME,
       name: "home",
-      component: () => import("../pages/Home.vue"),
+      component: () => import("@/pages/Home.vue"),
     },
     {
       path: ROUTES_PATHS.CATEGORIES,
       name: "categories",
-      component: () => import("../pages/Categories.vue"),
+      component: () => import("@/pages/Categories.vue"),
     },
 
     {
       path: ROUTES_PATHS.RECIPE,
       name: "recipe",
-      component: () => import("../pages/Recipe.vue"),
+      component: () => import("@/pages/Recipe.vue"),
     },
   ],
 });

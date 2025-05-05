@@ -1,6 +1,6 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import { CommonService } from "@/services";
+import { CommonService } from "@/services/";
 
 export const useRootStore = defineStore("root", () => {
   const areas = ref(null);

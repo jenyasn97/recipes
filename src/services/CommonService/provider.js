@@ -1,5 +1,5 @@
 import axios from "axios";
-import { URL_AREAS, URL_CATEGORIES, URL_INGRIDIENTS } from "../../constants";
+import { URL_AREAS, URL_CATEGORIES, URL_INGRIDIENTS } from "@/constants";
 
 export const getAreas = async () => {
   const data = await axios.get(URL_AREAS);

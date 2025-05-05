@@ -22,7 +22,7 @@ import AppMenu from "@/components/AppMenu.vue";
 </script>
 
 <style lang="scss" scoped>
-@use "@/assets/styles/variables.scss";
+@use "../assets/styles/variables.scss";
 .menuInner {
   width: 70px;
 }

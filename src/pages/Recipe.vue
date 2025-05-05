@@ -2,10 +2,11 @@
   <AppLayout>
     <template #title> {{ isCreatingMode ? "Новый рецепт" : recipeUpdated.strMeal }} </template>
     <template #controls>
-      <AppButton text="Сохранить"></AppButton>
+      <AppButton text="Сохранить" @click="createOrUpdateRecipe"></AppButton>
     </template>
     <template #inner>
-      <div class="wrapper">
+      <AppLoader v-if="isLoading" />
+      <div v-else class="wrapper">
         <div class="row">
           <div class="col">
             <div class="label">Title</div>
@@ -29,7 +30,7 @@
 
         <div class="ingridients">
           <div class="subtitle">Ingridients</div>
-          <div class="row align-items-flex-end" v-for="(ingridient, idx) in recipeIngridients" :key="`${ingridient.title}-${idx}`">
+          <div class="row align-items-flex-end" v-for="(ingridient, idx) in recipeIngridients" :key="`${ingridient.id}-${idx}`">
             <div class="col col-small bm-2">{{ idx + 1 }}</div>
             <div class="col">
               <div class="label">Measure</div>
@@ -56,9 +57,11 @@
 
 <script setup>
 import AppButton from "@/components/AppButton.vue";
+import AppLoader from "@/components/AppLoader.vue";
 import AppLayout from "@/layouts/AppLayout.vue";
 import { RecipeService, CommonService } from "@/services";
 import { useRootStore } from "@/stores/root";
+import { notify } from "@/utils";
 import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 
@@ -69,6 +72,7 @@ const recipe = ref(RecipeService.getEmptyRecipe());
 const recipeUpdated = ref(RecipeService.getEmptyRecipe());
 const isCreatingMode = ref(true);
 const recipeIngridients = ref([CommonService.getEmptyIngridient()]);
+const isLoading = ref(false);
 
 const areas = computed(() => {
   return rootStore.areas;
@@ -82,6 +86,7 @@ const normalizeRecipeIngridients = () => {
   for (let i = 1; i <= 20; i++) {
     if (recipe.value[`strIngredient${i}`]) {
       const ingr = {
+        id: Math.random().toString(36).slice(2),
         title: recipe.value[`strIngredient${i}`],
         measure: recipe.value[`strMeasure${i}`],
       };
@@ -91,14 +96,66 @@ const normalizeRecipeIngridients = () => {
   recipeIngridients.value = normalizedIngridients;
 };
 
+const denormalizeRecipeIngridients = (recipe) => {
+  for (let i = 1; i <= 20; i++) {
+    const ingridient = recipeIngridients.value[i - 1];
+
+    if (ingridient?.title && ingridient?.measure) {
+      recipe[`strIngredient${i}`] = ingridient.title;
+      recipe[`strMeasure${i}`] = ingridient.measure;
+    } else {
+      recipe[`strIngredient${i}`] = "";
+      recipe[`strMeasure${i}`] = "";
+    }
+  }
+};
+
+function createOrUpdateRecipe() {
+  isCreatingMode.value ? createRecipe() : updateRecipe();
+}
+
+async function createRecipe() {
+  try {
+    isLoading.value = true;
+    const params = { ...recipeUpdated.value };
+    denormalizeRecipeIngridients(params);
+    await RecipeService.createRecipe();
+
+    setTimeout(() => {
+      isLoading.value = false;
+      notify("Создано", `Рецепт ${params.strMeal} создан`, "success");
+    }, 1000);
+  } catch (error) {
+    console.log(error);
+  }
+}
+async function updateRecipe() {
+  try {
+    isLoading.value = true;
+    const params = { ...recipeUpdated.value };
+    denormalizeRecipeIngridients(params);
+    await RecipeService.updateRecipe();
+
+    setTimeout(() => {
+      isLoading.value = false;
+      notify("Обновлено", `Рецепт ${params.strMeal} обновлен`, "success");
+    }, 1000);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 async function fetchRecipe() {
   try {
+    isLoading.value = true;
     const data = await RecipeService.getRecipesById(recipeId);
     recipe.value = { ...data };
     recipeUpdated.value = { ...data };
     isCreatingMode.value = false;
   } catch (error) {
     console.log(error);
+  } finally {
+    isLoading.value = false;
   }
 }
 

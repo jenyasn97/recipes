@@ -40,7 +40,7 @@ function isPathActive(path) {
 </script>
 
 <style lang="scss" scoped>
-@use "@/assets/styles/variables.scss";
+@use "../assets/styles/variables.scss";
 .menu {
   border-right: 1px solid variables.$border;
   height: 100%;

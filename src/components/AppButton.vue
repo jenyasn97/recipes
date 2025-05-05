@@ -22,7 +22,7 @@ const props = defineProps({
 </script>
 
 <style lang="scss" scoped>
-@use "@/assets/styles/variables.scss";
+@use "../assets/styles/variables.scss";
 
 .btn {
   background-color: variables.$violet;
